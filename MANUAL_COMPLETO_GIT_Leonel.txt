@@ -1,0 +1,188 @@
+MANUAL COMPLETO DE GIT Autor:
+
+============================================================ PARTE 1 —
+FUNDAMENTOS DE GIT (BÁSICO)
+============================================================
+
+1)  ¿Qué es Git? Git es un sistema de control de versiones. Permite:
+
+-   Guardar versiones de un proyecto
+-   Ver cambios realizados
+-   Volver a versiones anteriores
+-   Trabajar en equipo sin perder información
+
+2)  Configuración inicial
+
+git config –global user.name “TuNombre” git config –global user.email
+“tuemail@email.com”
+
+Ver configuración: git config –list
+
+Archivo donde se guarda: ~/.gitconfig
+
+------------------------------------------------------------------------
+
+3)  Crear un repositorio
+
+mkdir mi-proyecto cd mi-proyecto git init
+
+Esto crea la carpeta oculta .git Ahí se guarda todo el historial.
+
+------------------------------------------------------------------------
+
+4)  Ver estado del proyecto
+
+git status
+
+------------------------------------------------------------------------
+
+5)  Agregar archivos
+
+Agregar uno: git add archivo.txt
+
+Agregar todo: git add .
+
+------------------------------------------------------------------------
+
+6)  Guardar versión (Commit)
+
+git commit -m “Mensaje claro”
+
+Un commit es como guardar la partida de un juego.
+
+------------------------------------------------------------------------
+
+7)  Ver historial
+
+git log git log –oneline
+
+------------------------------------------------------------------------
+
+8)  Corregir errores
+
+Restaurar archivo: git restore archivo.txt
+
+Eliminar último commit pero conservar cambios: git reset –soft HEAD~1
+
+Eliminar último commit y borrar cambios (PELIGRO): git reset –hard
+HEAD~1
+
+------------------------------------------------------------------------
+
+9)  Ramas
+
+Ver ramas: git branch
+
+Crear rama: git branch nueva_rama
+
+Cambiar rama: git checkout nueva_rama o git switch nueva_rama
+
+Crear y cambiar: git checkout -b nueva_rama
+
+------------------------------------------------------------------------
+
+10) Unir ramas
+
+git checkout master git merge nueva_rama
+
+Borrar rama: git branch -d nueva_rama
+
+------------------------------------------------------------------------
+
+11) Ver diferencias
+
+git diff git blame archivo.txt git show ID_DEL_COMMIT
+
+------------------------------------------------------------------------
+
+Conceptos clave: - Git guarda snapshots completos. - Las ramas son
+punteros a commits. - .git es la base de datos del proyecto.
+
+============================================================ PARTE 2 —
+SERVIDOR GIT LINUX ↔ WINDOWS (INTERMEDIO)
+============================================================
+
+1)  Crear servidor en Linux (repositorio bare)
+
+sudo apt update sudo apt install git
+
+mkdir repos cd repos git init –bare proyecto.git
+
+El repositorio bare es una base de datos de historial. No tiene archivos
+editables.
+
+------------------------------------------------------------------------
+
+2)  Compartir con Samba
+
+sudo apt install samba
+
+Editar: sudo nano /etc/samba/smb.conf
+
+Agregar:
+
+[repos] path = /ruta/completa/repos browseable = yes read only = no
+guest ok = no
+
+Crear usuario: sudo smbpasswd -a leonel
+
+Reiniciar: sudo systemctl restart smbd
+
+------------------------------------------------------------------------
+
+3)  Conectar desde Windows
+
+En explorador: \192.168.1.20
+
+Mapear como unidad de red (ej: Z:)
+
+Ahora tienes: Z:.git
+
+------------------------------------------------------------------------
+
+4)  Clonar en Windows
+
+cd C: git clone Z:.git
+
+cd proyecto
+
+Configurar usuario: git config –global user.name “Leonel” git config
+–global user.email “tuemail@email.com”
+
+------------------------------------------------------------------------
+
+5)  Flujo de trabajo
+
+Modificar archivo git add . git commit -m “mensaje” git push -u origin
+master (primera vez)
+
+Después solo: git push git pull
+
+------------------------------------------------------------------------
+
+6)  Crear y subir rama
+
+git switch -c desarroll git push -u origin desarroll
+
+------------------------------------------------------------------------
+
+7)  Clonar también en Linux
+
+git clone proyecto.git proyecto-trabajo cd proyecto-trabajo
+
+Traer rama remota: git checkout desarroll
+
+------------------------------------------------------------------------
+
+Conceptos importantes:
+
+-   origin es el nombre del repositorio remoto.
+-   -u crea vínculo entre rama local y remota.
+-   git push envía commits, no archivos individuales.
+-   git pull trae commits del servidor.
+-   El repositorio bare es solo base de datos.
+-   Cada clon es independiente.
+-   Las ramas locales y remotas no son lo mismo.
+
+============================================================ FIN DEL
+MANUAL ============================================================
