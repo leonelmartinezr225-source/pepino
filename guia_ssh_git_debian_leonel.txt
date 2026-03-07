@@ -1,0 +1,132 @@
+GUÍA COMPLETA: CONFIGURACIÓN SSH Y GIT EN LINUX (DEBIAN) Autor: Leonel
+Martinez
+
+  ------------------------------------------------------------
+  1) ¿QUÉ ES SSH?
+  ------------------------------------------------------------
+  SSH (Secure Shell) es un protocolo que permite conectarse de
+  forma segura a otros servidores usando criptografía.
+
+  Cuando usamos Git con SSH, no enviamos contraseña. Usamos
+  llaves criptográficas.
+  ------------------------------------------------------------
+
+2) INSTALAR OPENSSH CLIENT
+
+sudo apt update sudo apt install openssh-client
+
+Esto instala ssh, ssh-keygen y herramientas necesarias.
+
+  ------------------------------------------------------------
+  3) CREAR LLAVES SSH
+  ------------------------------------------------------------
+  ssh-keygen -t ed25519 -C “tuemail@example.com”
+
+  - ssh-keygen → Genera llaves criptográficas - -t ed25519 →
+  Tipo de algoritmo moderno y seguro - -C → Comentario
+  (normalmente tu correo)
+
+  Esto crea:
+
+  ~/.ssh/id_ed25519 → LLAVE PRIVADA (NO se comparte)
+  ~/.ssh/id_ed25519.pub → LLAVE PÚBLICA (Se sube a GitHub)
+  ------------------------------------------------------------
+
+4) INICIAR EL AGENTE SSH
+
+eval “$(ssh-agent -s)”
+
+Inicia el proceso que guarda las llaves en memoria.
+
+Agregar la llave al agente:
+
+ssh-add ~/.ssh/id_ed25519
+
+Ver llaves cargadas:
+
+ssh-add -l
+
+  ------------------------------------------------------------
+  5) VER TU LLAVE PÚBLICA
+  ------------------------------------------------------------
+  cat ~/.ssh/id_ed25519.pub
+
+  Esa llave se copia y se pega en GitHub: Settings → SSH and
+  GPG Keys → New SSH Key
+  ------------------------------------------------------------
+
+6) PROBAR CONEXIÓN CON GITHUB
+
+ssh -T git@github.com
+
+Modo debug:
+
+ssh -vT git@github.com ssh -vvT git@github.com ssh -vvvT git@github.com
+
+Más “v” = más detalle.
+
+  ------------------------------------------------------------
+  7) CREAR REPOSITORIO LOCAL
+  ------------------------------------------------------------
+  mkdir mi-proyecto cd mi-proyecto git init
+
+  Crear archivo de prueba:
+
+  echo “Hola mundo” > archivo.txt
+  ------------------------------------------------------------
+
+8) HACER COMMIT
+
+git add . git commit -m “Primer commit”
+
+Ver estado:
+
+git status
+
+Ver historial:
+
+git log
+
+  ------------------------------------------------------------
+  9) CONECTAR A GITHUB (REMOTE)
+  ------------------------------------------------------------
+  Agregar remote:
+
+  git remote add origin git@github.com:USUARIO/REPO.git
+
+  Ver remotes:
+
+  git remote -v
+
+  Cambiar URL del remote:
+
+  git remote set-url origin git@github.com:USUARIO/REPO.git
+
+  Eliminar remote:
+
+  git remote remove origin
+  ------------------------------------------------------------
+
+10) SUBIR CAMBIOS
+
+git branch -M main git push -u origin main
+
+Después solo:
+
+git push
+
+  ------------------------------------------------------------
+  11) DEBUG AVANZADO EN GIT
+  ------------------------------------------------------------
+  GIT_TRACE=1 git push
+
+  Muestra información interna de Git.
+  ------------------------------------------------------------
+
+CONCEPTO FINAL
+
+Llave privada → Demuestra tu identidad Llave pública → Se guarda en el
+servidor ssh-agent → Guarda tu llave en memoria Remote → Enlace entre
+repo local y GitHub origin → Nombre por defecto del remote
+
+Fin de la guía.
